@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# OS
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Result files (for submission)
+assign01/results/
+assign02/
+*.typst
