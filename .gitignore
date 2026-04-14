@@ -18,5 +18,5 @@ Thumbs.db
 
 # Result files (for submission)
 assign01/results/
-assign02/
+assign02/results/
 *.typst
