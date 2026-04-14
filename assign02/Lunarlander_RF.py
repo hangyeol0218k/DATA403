@@ -1,5 +1,6 @@
 import glob
 import os
+import re
 import random
 import warnings
 from collections import deque
@@ -214,9 +215,10 @@ def record_best_videos(pol_net, n_eval=30, n_keep=5, video_folder="./assign02/re
     print(f"\nTop {n_keep} episodes kept:")
     for idx in sorted(best_indices, key=lambda i: eval_rewards[i], reverse=True):
         print(f"  Episode {idx}: reward = {eval_rewards[idx]:.2f}")
-    video_files = sorted(glob.glob(os.path.join(video_folder, "rl-video-episode-*.mp4")))
-    for i, f in enumerate(video_files):
-        if i not in best_indices:
+    video_files = glob.glob(os.path.join(video_folder, "rl-video-episode-*.mp4"))
+    for f in video_files:
+        ep_num = int(re.search(r"episode-(\d+)", f).group(1))
+        if ep_num not in best_indices:
             os.remove(f)
     for f in glob.glob(os.path.join(video_folder, "rl-video-episode-*.meta.json")):
         os.remove(f)
@@ -256,13 +258,19 @@ def plot_results(episode_rewards, pol_losses, val_losses, M, out_dir="./assign02
 
 
 def main():
+    seed = 124
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+
     # Create LunarLander environment
     # Action space: env.action_space.n (continuous action space)
     # State space: env.observation_space.shape
     env = gym.make("LunarLander-v3", continuous=True, render_mode=None)
+    env.reset(seed=seed)
 
     M = 3000
-    pol_lr = 1e-3
+    pol_lr = 3e-4
     val_lr = 1e-3
     gamma = 0.99
     hyperparams = (M, pol_lr, val_lr, gamma)
